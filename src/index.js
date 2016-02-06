@@ -10,7 +10,10 @@ import isFunctor from '@f/is-functor'
 import isIterator from '@f/is-iterator'
 
 /**
- * run
+ * Run middleware
+ * @param  {Array} middleware middleware stack
+ * @param  {Object} ctx
+ * @return {Function}
  */
 
 let run = (middleware, ctx) => {
@@ -22,6 +25,13 @@ let run = (middleware, ctx) => {
     return toPromise(map(dispatch, action))
   }
 }
+
+
+/**
+ * Is a value mappable
+ * @param  {Obj}  val
+ * @return {Boolean}
+ */
 
 function isMappable (val) {
   return isFunctor(val) || isGenerator(val) || isIterator(val)
