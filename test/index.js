@@ -145,3 +145,16 @@ test('should have access to context', (t) => {
     t.equal(res, 'bargoogle')
   }).catch((err) => console.log(err))
 })
+
+test('should drop undefined', (t) => {
+  t.plan(1)
+  let dispatch = run([
+    function (action) {
+      if (!action) throw new Error('should not receive undefined')
+    }
+  ])
+
+  dispatch(undefined).then(function (res) {
+    t.equal(res, undefined)
+  })
+})
