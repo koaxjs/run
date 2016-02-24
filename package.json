@@ -16,10 +16,10 @@
     "@f/is-iterator": "^1.0.1",
     "@f/is-undefined": "^1.1.1",
     "@f/map": "^1.5.3",
-    "@f/to-promise": "^1.1.2",
-    "@koax/compose": "^0.3.1"
+    "@f/to-promise": "^1.1.2"
   },
   "devDependencies": {
+    "@koax/compose": "^0.3.1",
     "@f/is-promise": "^1.1.1",
     "babel-cli": "^6.4.0",
     "babel-polyfill": "^6.3.13",

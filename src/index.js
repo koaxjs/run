@@ -17,10 +17,7 @@ import isUndefined from '@f/is-undefined'
  * @return {Function}
  */
 
-let run = (middleware, ctx) => {
-
-  let composed = compose(middleware)
-
+let run = (composed, ctx) => {
   return dispatch
 
   function dispatch (action, next) {
@@ -29,8 +26,6 @@ let run = (middleware, ctx) => {
     action = isMappable(action) ? action : composed(action, next, ctx)
     return toPromise(map(dispatch, action))
   }
-
-
 }
 
 

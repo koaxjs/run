@@ -5,6 +5,7 @@
 import test from 'tape'
 import run from '../src'
 import isPromise from '@f/is-promise'
+import compose from '@koax/compose'
 
 /**
  * Tests
@@ -12,12 +13,12 @@ import isPromise from '@f/is-promise'
 
 test('should handle action', (t) => {
   t.plan(3)
-  let dispatch = run([
+  let dispatch = run(compose([
     function (action, next) {
       if (action === 'foo') return 'bar'
       if (action === 'qux') return next()
     }
-  ])
+  ]))
 
   dispatch('foo').then(function (res) {
     t.equal(res, 'bar')
@@ -34,13 +35,13 @@ test('should handle action', (t) => {
 
 test('should dispatch yielded action', (t) => {
   t.plan(3)
-  let dispatch = run([
+  let dispatch = run(
     function * (action, next) {
       if (action === 'foo') return 'foo ' + (yield 'bar')
       if (action === 'bar') return 'qux'
       else return 'woot'
     }
-  ])
+  )
 
   dispatch('bar').then(function (res) {
     t.equal(res, 'qux')
@@ -57,13 +58,13 @@ test('should dispatch yielded action', (t) => {
 
 test('should reolve yielded promise', (t) => {
   t.plan(2)
-  let dispatch = run([
+  let dispatch = run(compose([
     function * (action, next) {
       if (action === 'foo') return yield Promise.resolve('bar')
       if (!isPromise(action)) return 'qux'
       else return next()
     }
-  ])
+  ]))
 
   dispatch('foo').then(function (res) {
     t.equal(res, 'bar')
@@ -76,7 +77,7 @@ test('should reolve yielded promise', (t) => {
 
 test('should resolve yielded action promise', (t) => {
   t.plan(3)
-  let dispatch = run([
+  let dispatch = run(compose([
     function * (action, next) {
       if (action === 'fetch') return yield Promise.resolve('google')
       return next()
@@ -86,7 +87,7 @@ test('should resolve yielded action promise', (t) => {
       if (!isPromise(action)) return 'qux'
       else return next()
     }
-  ])
+  ]))
 
   dispatch('foo').then(function (res) {
     t.equal(res, 'foo google')
@@ -103,7 +104,7 @@ test('should resolve yielded action promise', (t) => {
 
 test('should resolve array of action promises', (t) => {
   t.plan(3)
-  let dispatch = run([
+  let dispatch = run(compose([
     function * (action, next) {
       if (action === 'fetch') return yield Promise.resolve('google')
       return next()
@@ -117,7 +118,7 @@ test('should resolve array of action promises', (t) => {
       if (!isPromise(action)) return 'qux'
       else return next()
     }
-  ])
+  ]))
 
   dispatch('foo').then(function (res) {
     t.deepEqual(res, ['google', 'updated'])
@@ -134,12 +135,11 @@ test('should resolve array of action promises', (t) => {
 
 test('should have access to context', (t) => {
   t.plan(1)
-  let dispatch = run([
+  let dispatch = run(compose([
     function (action, next, ctx) {
       if (action === 'foo') return 'bar' + ctx.fetched
       if (action === 'qux') return next()
-    }
-  ], {fetched: 'google'})
+    }]), {fetched: 'google'})
 
   dispatch('foo').then(function (res) {
     t.equal(res, 'bargoogle')
@@ -148,11 +148,11 @@ test('should have access to context', (t) => {
 
 test('should drop undefined', (t) => {
   t.plan(1)
-  let dispatch = run([
+  let dispatch = run(
     function (action) {
       if (!action) throw new Error('should not receive undefined')
     }
-  ])
+  )
 
   dispatch(undefined).then(function (res) {
     t.equal(res, undefined)
