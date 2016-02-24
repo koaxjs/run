@@ -161,31 +161,3 @@ test('should drop undefined', (t) => {
     t.equal(res, undefined)
   })
 })
-
-test('composition of composition', (t) => {
-  t.plan(3)
-  let composed1 = compose([
-    function (action, next) {
-      if (action === 'bar') return 'qux'
-      return next()
-    }
-  ])
-
-  let composed2 = compose([
-    function (action, next) {
-      if (action === 'foo') return 'baz'
-      return next()
-    },
-    function * (action) {
-      return yield action
-    }
-  ])
-
-  let composed = composeFns(run(composed1), composed2)
-
-  composed('woot').then(res => t.equal(res, 'woot'))
-  composed('bar').then(res => t.equal(res, 'qux'))
-  composed('foo').then(res => t.equal(res, 'baz'))
-
-
-})
