@@ -6,6 +6,7 @@ import test from 'tape'
 import run from '../src'
 import isPromise from '@f/is-promise'
 import compose from '@koax/compose'
+import composeFns from '@f/compose'
 
 /**
  * Tests
@@ -91,6 +92,8 @@ test('should resolve yielded action promise', (t) => {
 
   dispatch('foo').then(function (res) {
     t.equal(res, 'foo google')
+  }).catch(function (err) {
+    console.log('err', err)
   })
 
   dispatch('fetch').then(function (res) {
@@ -157,4 +160,32 @@ test('should drop undefined', (t) => {
   dispatch(undefined).then(function (res) {
     t.equal(res, undefined)
   })
+})
+
+test('composition of composition', (t) => {
+  t.plan(3)
+  let composed1 = compose([
+    function (action, next) {
+      if (action === 'bar') return 'qux'
+      return next()
+    }
+  ])
+
+  let composed2 = compose([
+    function (action, next) {
+      if (action === 'foo') return 'baz'
+      return next()
+    },
+    function * (action) {
+      return yield action
+    }
+  ])
+
+  let composed = composeFns(run(composed1), composed2)
+
+  composed('woot').then(res => t.equal(res, 'woot'))
+  composed('bar').then(res => t.equal(res, 'qux'))
+  composed('foo').then(res => t.equal(res, 'baz'))
+
+
 })

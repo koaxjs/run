@@ -2,7 +2,6 @@
  * Imports
  */
 
-import compose from '@koax/compose'
 import map from '@f/map'
 import toPromise from '@f/to-promise'
 import isGenerator from '@f/is-generator'
@@ -22,12 +21,10 @@ let run = (composed, ctx) => {
 
   function dispatch (action, next) {
     if (isUndefined(action)) return Promise.resolve()
-
     action = isMappable(action) ? action : composed(action, next, ctx)
     return toPromise(map(dispatch, action))
   }
 }
-
 
 /**
  * Is a value mappable
