@@ -2,7 +2,7 @@
   "name": "@koax/run",
   "description": "Run a middleware stack.",
   "repository": "git://github.com/koaxjs/run.git",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
