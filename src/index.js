@@ -8,6 +8,7 @@ import isGenerator from '@f/is-generator'
 import isFunctor from '@f/is-functor'
 import isIterator from '@f/is-iterator'
 import isUndefined from '@f/is-undefined'
+import compose from '@koax/compose'
 
 /**
  * Run middleware
@@ -16,7 +17,8 @@ import isUndefined from '@f/is-undefined'
  * @return {Function}
  */
 
-let run = (composed, ctx) => {
+let run = ctx => middleware => {
+  let composed = compose(middleware)
   return dispatch
 
   function dispatch (action, next) {

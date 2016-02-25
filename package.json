@@ -21,6 +21,7 @@
   "devDependencies": {
     "@f/compose": "^1.0.1",
     "@f/is-promise": "^1.1.1",
+    "@f/middleware": "^1.1.0",
     "@koax/compose": "^0.3.1",
     "babel-cli": "^6.4.0",
     "babel-polyfill": "^6.3.13",
